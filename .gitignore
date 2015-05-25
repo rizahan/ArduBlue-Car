@@ -1,0 +1,161 @@
+#include <SoftwareSerial.h>
+
+SoftwareSerial myBluetooth(5, 6); // RX, TX
+
+int pwm_a = 3;   
+int pwm_b = 11;  
+int dir_a = 12;  
+int dir_b = 13;  
+int val = 0; 
+int deger;
+int pinSpeaker =2;
+int longLight =4;
+int frontLight =9;
+int rearLight=8;
+void setup()
+{myBluetooth.begin(9600);
+  pinMode(pwm_a, OUTPUT);  
+  pinMode(pwm_b, OUTPUT);
+  pinMode(dir_a, OUTPUT);
+  pinMode(dir_b, OUTPUT);
+    pinMode(longLight,OUTPUT);
+  pinMode(pinSpeaker, OUTPUT);
+  pinMode(frontLight, OUTPUT);
+  pinMode(rearLight, OUTPUT);
+
+  
+}
+
+void loop()
+{ 
+    if (myBluetooth.available())
+{
+deger=myBluetooth.read();
+if(deger=='a'){
+  forward();
+  delay(1);
+}
+if (deger=='b'){
+backward();
+delay(1);
+}
+if(deger=='c'){
+  left();
+  delay(1);
+}
+if(deger=='d'){
+  right();
+  delay(1);
+}
+if(deger=='e'){
+  openLight();
+  delay(1);
+}
+if(deger=='f'){
+  closeLight();
+  delay(1);
+}
+if(deger=='g'){
+  longLightOpen();
+  delay(1);
+}
+if(deger=='h'){
+  longLightClose();
+  delay(1);
+}
+if(deger=='i'){
+  openHorn();
+  delay(1);
+}
+if(deger=='j'){
+  closeHorn();
+  delay(1);
+}
+if(deger=='k'){
+  rearStop();
+  delay(1);
+}
+if(deger=='l'){
+  frontStop();
+  delay(1);
+}
+}}
+
+
+//METHODS
+void forward()
+{ 
+  digitalWrite(dir_a, HIGH); 
+  analogWrite(pwm_a, 255);    
+}
+
+void backward() 
+{
+  digitalWrite(dir_a, LOW);  
+  analogWrite(pwm_a, 255);   
+}
+
+void left() 
+{
+  digitalWrite(dir_b, HIGH);  
+  analogWrite(pwm_b, 255);   
+}
+
+void right() 
+{
+  digitalWrite(dir_b, LOW); 
+  analogWrite(pwm_b, 255);   
+}
+void rearStop()                  
+{
+  analogWrite(pwm_a, 0);    
+}
+void frontStop()                  
+{ 
+  analogWrite(pwm_b, 0); 
+}
+
+void playTone(long duration, int freq) {
+    duration *= 1000;
+    int period = (1.0 / freq) * 1000000;
+    long elapsed_time = 0;
+    while (elapsed_time < duration) {
+        digitalWrite(pinSpeaker,HIGH);
+        delayMicroseconds(period / 2);
+        digitalWrite(pinSpeaker, LOW);
+        delayMicroseconds(period / 2);
+        elapsed_time += (period);
+    }
+    }
+    
+    void longLightOpen()
+    {
+    digitalWrite(longLight,HIGH);  
+    }
+       void longLightClose()
+    {
+    digitalWrite(longLight,LOW);  
+    }
+    
+    void openLight()
+    {
+    digitalWrite(frontLight,HIGH);
+    digitalWrite(rearLight,HIGH);  
+    }
+       
+    void closeLight()
+    {
+    digitalWrite(frontLight,LOW);
+    digitalWrite(rearLight,LOW);  
+    }
+    
+    void openHorn()
+    {
+      playTone(360,160);
+    }
+    void closeHorn()
+    {
+      playTone(0,0);
+    }
+
+    
